@@ -8,15 +8,21 @@ print(".........................................")
 # open the csv file as reading
 with open(csv_path) as csvfile:
     csv_reader = csv.reader(csvfile,delimiter=",")
-    # read the headers
+    # read and skip the headers 
     headers = next(csv_reader)
+
+    # Counting the total number of votes cast 
+    # Extract list of candidates who received votes
+    # Counting the total number of votes each candidate won
     Total_Count = 0
     candidates_list = []
     vote_count = [0,0,0,0]
     for row in csv_reader:
         Total_Count += 1
         if str(row[2]) not in candidates_list:
+            # Create the list of unique candidates who recieved votes
             candidates_list.append(str(row[2]))
+        # Counting the total number of votes each candidate won
         if row[2] == "Khan":
             vote_count[0] += 1
         elif row[2] == "Correy":
@@ -29,16 +35,19 @@ with open(csv_path) as csvfile:
     print("........................................")
     #print(candidates_list)
     #print(vote_count)
-    
+
+    # Calculating the percentage of votes each candidate won and add in a seperete list
     percentage_vote = []
     percentage = 0
     for i in vote_count:
         percentage = round(float(int(i) / int(Total_Count)),3)
         percentage_vote.append(str(percentage))
     #print(percentage_vote)
-    
+
+    # zipping these three lists
     new=zip(candidates_list,vote_count,percentage_vote)
 
+    # write ziped lists into the output file
     output_file = os.path.join("output.csv")
     with open(output_file,'w',newline = '') as datafile:
         writer = csv.writer(datafile, delimiter=",")
@@ -46,12 +55,14 @@ with open(csv_path) as csvfile:
         writer.writerow(["Candidate","Percentage_Votes","Total_Votes"])
         writer.writerows(new)
 
-    
+    # open the output file as reading for read and write the data in Terminal
     output_path = os.path.join("output.csv")
     with open(output_path) as rfile:
         csvreader = csv.reader(rfile,delimiter=",")
-        # read the headers
+        # read and skip the headers
         headers = next(csvreader)
+
+        # find the winner and get it's name
         win = 0
         win_name = " "
         for row in csvreader:
